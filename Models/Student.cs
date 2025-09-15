@@ -1,4 +1,6 @@
-﻿namespace ContosoUniversity.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace ContosoUniversity.Models
 {
     public class Student
     {
@@ -6,6 +8,7 @@
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public DateTime EnrollmentDate { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
+
+        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

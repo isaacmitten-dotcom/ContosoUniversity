@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
+using Microsoft.Extensions.Logging;
+
 
 namespace ContosoUniversity.Pages.Students
 {
     public class CreateModel : PageModel
     {
         private readonly ContosoUniversity.Data.SchoolContext _context;
+        private readonly ILogger<IndexModel> _logger;
 
-        public CreateModel(ContosoUniversity.Data.SchoolContext context)
+
+        public CreateModel(ContosoUniversity.Data.SchoolContext context, ILogger<IndexModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult OnGet()
@@ -32,6 +37,14 @@ namespace ContosoUniversity.Pages.Students
         {
             if (!ModelState.IsValid)
             {
+                foreach (var key in ModelState.Keys)
+                {
+                    var entry = ModelState[key];
+                    foreach (var error in entry.Errors)
+                    {
+                        _logger.LogError("ModelState error in {Key}: {ErrorMessage}", key, error.ErrorMessage);
+                    }
+                }
                 return Page();
             }
 

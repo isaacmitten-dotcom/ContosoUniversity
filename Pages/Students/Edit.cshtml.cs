@@ -14,10 +14,13 @@ namespace ContosoUniversity.Pages.Students
     public class EditModel : PageModel
     {
         private readonly ContosoUniversity.Data.SchoolContext _context;
+        private readonly ILogger<IndexModel> _logger;
 
-        public EditModel(ContosoUniversity.Data.SchoolContext context)
+
+        public EditModel(ContosoUniversity.Data.SchoolContext context, ILogger<IndexModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -45,6 +48,15 @@ namespace ContosoUniversity.Pages.Students
         {
             if (!ModelState.IsValid)
             {
+                foreach (var key in ModelState.Keys)
+                {
+                    var entry = ModelState[key];
+                    foreach (var error in entry.Errors)
+                    {
+                        _logger.LogError("ModelState error in {Key}: {ErrorMessage}", key, error.ErrorMessage);
+                    }
+                }
+
                 return Page();
             }
 
