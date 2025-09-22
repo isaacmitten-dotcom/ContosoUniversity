@@ -1,89 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ContosoUniversity.Data;
-using ContosoUniversity.Models;
+﻿    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
+    using ContosoUniversity.Data;
+    using ContosoUniversity.Models;
 
-namespace ContosoUniversity.Pages.Students
-{
-    public class EditModel : PageModel
+    namespace ContosoUniversity.Pages.Students
     {
-        private readonly ContosoUniversity.Data.SchoolContext _context;
-        private readonly ILogger<IndexModel> _logger;
-
-
-        public EditModel(ContosoUniversity.Data.SchoolContext context, ILogger<IndexModel> logger)
+        public class EditModel : PageModel
         {
-            _context = context;
-            _logger = logger;
-        }
+            private readonly ContosoUniversity.Data.SchoolContext _context;
+            private readonly ILogger<IndexModel> _logger;
 
-        [BindProperty]
-        public Student Student { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)
+            public EditModel(ContosoUniversity.Data.SchoolContext context, ILogger<IndexModel> logger)
             {
-                return NotFound();
+                _context = context;
+                _logger = logger;
             }
 
-            var student =  await _context.Student.FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            Student = student;
-            return Page();
-        }
+        
+            public Student? Student { get; set; } = default!;
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
+            public async Task<IActionResult> OnGetAsync(int? id)
             {
-                foreach (var key in ModelState.Keys)
+                if (id == null)
                 {
-                    var entry = ModelState[key];
-                    foreach (var error in entry.Errors)
-                    {
-                        _logger.LogError("ModelState error in {Key}: {ErrorMessage}", key, error.ErrorMessage);
-                    }
+                    return NotFound();
+                }
+
+                Student = await _context.Student.FindAsync(id);
+
+                if (Student == null)
+                {
+                    return NotFound();
+                }
+                return Page();
+            }
+
+            public async Task<IActionResult> OnPostAsync(int id)
+            {
+                var studentToUpdate = await _context.Student.FindAsync(id);
+
+                if (studentToUpdate == null)
+                {
+                    return NotFound();
+                }
+
+                if (await TryUpdateModelAsync<Student>(
+                    studentToUpdate,
+                    //Had to change this prefix so that it binds correctly
+                    "",
+                    s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToPage("./Index");
                 }
 
                 return Page();
             }
-
-            _context.Attach(Student).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StudentExists(Student.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.Student.Any(e => e.Id == id);
         }
     }
-}
+

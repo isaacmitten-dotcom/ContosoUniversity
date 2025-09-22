@@ -30,27 +30,18 @@ namespace ContosoUniversity.Pages.Students
         }
 
         [BindProperty]
-        public Student Student { get; set; } = default!;
+        public StudentVM StudentVM { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                foreach (var key in ModelState.Keys)
-                {
-                    var entry = ModelState[key];
-                    foreach (var error in entry.Errors)
-                    {
-                        _logger.LogError("ModelState error in {Key}: {ErrorMessage}", key, error.ErrorMessage);
-                    }
-                }
-                return Page();
-            }
+           if (!ModelState.IsValid) return Page();
 
-            _context.Student.Add(Student);
+
+            var entry = _context.Add(new Student());
+
+            entry.CurrentValues.SetValues(StudentVM);
             await _context.SaveChangesAsync();
-
             return RedirectToPage("./Index");
         }
     }
