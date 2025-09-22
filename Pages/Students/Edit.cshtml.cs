@@ -8,61 +8,84 @@
     using Microsoft.EntityFrameworkCore;
     using ContosoUniversity.Data;
     using ContosoUniversity.Models;
+using ContosoUniversity.Models.StudentViewModels;
 
-    namespace ContosoUniversity.Pages.Students
+namespace ContosoUniversity.Pages.Students
+{
+    public class EditModel : PageModel
     {
-        public class EditModel : PageModel
+        private readonly ContosoUniversity.Data.SchoolContext _context;
+        private readonly ILogger<IndexModel> _logger;
+
+
+        public EditModel(ContosoUniversity.Data.SchoolContext context, ILogger<IndexModel> logger)
         {
-            private readonly ContosoUniversity.Data.SchoolContext _context;
-            private readonly ILogger<IndexModel> _logger;
+            _context = context;
+            _logger = logger;
+        }
 
 
-            public EditModel(ContosoUniversity.Data.SchoolContext context, ILogger<IndexModel> logger)
+        public Student? Student { get; set; } = default!;
+
+        [BindProperty]
+        public StudentVM? StudentVM { get; set; } = default!;
+
+
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            if (id == null)
             {
-                _context = context;
-                _logger = logger;
+                return NotFound();
             }
 
-        
-            public Student? Student { get; set; } = default!;
+            Student = await _context.Student.FindAsync(id);
 
-            public async Task<IActionResult> OnGetAsync(int? id)
+            if (Student == null)
             {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                Student = await _context.Student.FindAsync(id);
-
-                if (Student == null)
-                {
-                    return NotFound();
-                }
-                return Page();
+                return NotFound();
             }
 
-            public async Task<IActionResult> OnPostAsync(int id)
+            // Map Student to StudentVM
+            StudentVM = new StudentVM
             {
-                var studentToUpdate = await _context.Student.FindAsync(id);
+                FirstName = Student.FirstName,
+                LastName = Student.LastName,
+                EnrollmentDate = Student.EnrollmentDate
+            };
 
-                if (studentToUpdate == null)
-                {
-                    return NotFound();
-                }
+            return Page();
+        }
 
-                if (await TryUpdateModelAsync<Student>(
-                    studentToUpdate,
-                    //Had to change this prefix so that it binds correctly
-                    "",
-                    s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
-                {
-                    await _context.SaveChangesAsync();
-                    return RedirectToPage("./Index");
-                }
+        public async Task<IActionResult> OnPostAsync(int id)
+        {
+            var studentToUpdate = await _context.Student.FindAsync(id);
 
-                return Page();
+            if (studentToUpdate == null)
+            {
+                return NotFound();
             }
+
+            if (!ModelState.IsValid) return Page();
+
+
+            if (await TryUpdateModelAsync(
+                studentToUpdate,
+                "studentVM", 
+                s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
+            {
+
+                var entry = _context.Entry(studentToUpdate);
+
+                entry.CurrentValues.SetValues(StudentVM);
+                await _context.SaveChangesAsync();
+
+                TempData["Message"] = "Student updated successfully";
+
+                return RedirectToPage("./Index");
+            }
+
+            return Page();
         }
     }
+}
 

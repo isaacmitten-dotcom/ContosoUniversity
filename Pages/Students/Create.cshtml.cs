@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using Microsoft.Extensions.Logging;
+using ContosoUniversity.Models.StudentViewModels;
 
 
 namespace ContosoUniversity.Pages.Students
@@ -42,6 +43,8 @@ namespace ContosoUniversity.Pages.Students
 
             entry.CurrentValues.SetValues(StudentVM);
             await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Student created successfully";
             return RedirectToPage("./Index");
         }
     }

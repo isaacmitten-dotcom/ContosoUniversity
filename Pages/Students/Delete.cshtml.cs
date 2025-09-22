@@ -7,38 +7,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
+using Microsoft.Extensions.Logging;
 
 namespace ContosoUniversity.Pages.Students
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel(ContosoUniversity.Data.SchoolContext context, ILogger<DeleteModel> logger) : PageModel
     {
-        private readonly ContosoUniversity.Data.SchoolContext _context;
-
-        public DeleteModel(ContosoUniversity.Data.SchoolContext context)
-        {
-            _context = context;
-        }
+        private readonly ContosoUniversity.Data.SchoolContext _context = context;
+        private readonly ILogger<DeleteModel> _logger = logger;
 
         [BindProperty]
-        public Student Student { get; set; } = default!;
+        public Student? Student { get; set; }
+        public string? ErrorMessage;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+
+        public async Task<IActionResult> OnGetAsync(int? id, bool saveChangesError = false)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var student = await _context.Student.FirstOrDefaultAsync(m => m.Id == id);
+            Student = await _context.Student.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
 
-            if (student is not null)
-            {
-                Student = student;
+            if (Student == null) return NotFound();
 
-                return Page();
+
+            if (saveChangesError) {
+                ErrorMessage = $"Delete {id} failed";
             }
 
-            return NotFound();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
@@ -49,14 +48,22 @@ namespace ContosoUniversity.Pages.Students
             }
 
             var student = await _context.Student.FindAsync(id);
-            if (student != null)
-            {
-                Student = student;
-                _context.Student.Remove(Student);
-                await _context.SaveChangesAsync();
-            }
 
-            return RedirectToPage("./Index");
+
+            try {
+                _context.Student.Remove(student);
+                await _context.SaveChangesAsync();
+
+                TempData["Message"] = "Student deleted successfully";
+
+
+                return RedirectToPage("./Index");
+
+            }
+            catch (DbUpdateException ex) {
+                _logger.LogError(ex, $"Delete failed for {id}");
+                return RedirectToPage("./Delete", new {id, saveChangesError = true});
+            }
         }
     }
 }
