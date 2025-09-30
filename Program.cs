@@ -28,8 +28,10 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<SchoolContext>();
-    context.Database.EnsureCreated();
-    DbInit.Initialize(context);
+    //DbInit.Initialize(context);
+    DbSeedFromXML.SeedFromXml(context, "Data/Seed.xml");
+    var exporter = new DbExportToXML(context);
+    exporter.Export("Data/exportedData.xml");
 }
 
 

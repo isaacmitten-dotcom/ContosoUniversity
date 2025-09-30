@@ -38,7 +38,7 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Student.FindAsync(id);
+            Student = await _context.Students.FindAsync(id);
 
             if (Student == null)
             {
@@ -58,7 +58,7 @@ namespace ContosoUniversity.Pages.Students
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            var studentToUpdate = await _context.Student.FindAsync(id);
+            var studentToUpdate = await _context.Students.FindAsync(id);
 
             if (studentToUpdate == null)
             {
@@ -68,13 +68,17 @@ namespace ContosoUniversity.Pages.Students
             if (!ModelState.IsValid) return Page();
 
 
-            if (await TryUpdateModelAsync(
-                studentToUpdate,
-                "studentVM", 
-                s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
-            {
+            //if (await TryUpdateModelAsync(
+            //    studentToUpdate,
+            //    "",
+            //    s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
+            //{
 
-                var entry = _context.Entry(studentToUpdate);
+            studentToUpdate.FirstName = StudentVM.FirstName;
+            studentToUpdate.LastName = StudentVM.LastName;
+            studentToUpdate.EnrollmentDate = StudentVM.EnrollmentDate;
+
+            var entry = _context.Entry(studentToUpdate);
 
                 entry.CurrentValues.SetValues(StudentVM);
                 await _context.SaveChangesAsync();
@@ -82,9 +86,24 @@ namespace ContosoUniversity.Pages.Students
                 TempData["Message"] = "Student updated successfully";
 
                 return RedirectToPage("./Index");
-            }
+            
 
-            return Page();
+            //foreach (var key in Request.Form.Keys)
+            //{
+            //    _logger.LogInformation("Form key: " + key);
+            //}
+
+            //foreach (var state in ModelState)
+            //{
+            //    foreach (var error in state.Value.Errors)
+            //    {
+            //        _logger.LogError($"ModelState error for {state.Key}: {error.ErrorMessage}");
+            //    }
+            //}
+
+            //_logger.LogInformation("Skipped tryupdate");
+
+            //return Page();
         }
     }
 }

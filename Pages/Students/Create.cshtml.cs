@@ -39,9 +39,13 @@ namespace ContosoUniversity.Pages.Students
            if (!ModelState.IsValid) return Page();
 
 
-            var entry = _context.Add(new Student());
+            var entry = _context.Students.Add(new Student());
 
             entry.CurrentValues.SetValues(StudentVM);
+
+            _logger.LogInformation("StudentVM: {@StudentVM}", StudentVM);
+
+
             await _context.SaveChangesAsync();
 
             TempData["Message"] = "Student created successfully";

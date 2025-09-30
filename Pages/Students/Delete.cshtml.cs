@@ -28,7 +28,7 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Student.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+            Student = await _context.Students.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
 
             if (Student == null) return NotFound();
 
@@ -47,11 +47,11 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-            var student = await _context.Student.FindAsync(id);
+            var student = await _context.Students.FindAsync(id);
 
 
             try {
-                _context.Student.Remove(student);
+                _context.Students.Remove(student);
                 await _context.SaveChangesAsync();
 
                 TempData["Message"] = "Student deleted successfully";

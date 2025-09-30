@@ -18,7 +18,7 @@ namespace ContosoUniversity.Pages
 
         public async Task OnGetAsync()
         {
-            IQueryable<EnrollmentDateGroup> data = from s in _context.Student
+            IQueryable<EnrollmentDateGroup> data = from s in _context.Students
                                                    group s by s.EnrollmentDate into g
                                                    select new EnrollmentDateGroup
                                                    {

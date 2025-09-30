@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContosoUniversityData>
+	<Students>
+		<Student FirstName="Meredith" LastName="Alonso" EnrollmentDate="2018-09-01" />
+		<Student FirstName="WORKED" LastName="WORKED" EnrollmentDate="2018-09-01" />
+		<Student FirstName="Arturo" LastName="Anand" EnrollmentDate="2019-09-01" />
+		<Student FirstName="Gytis" LastName="Barzdukas" EnrollmentDate="2018-09-01" />
+		<Student FirstName="Yan" LastName="Li" EnrollmentDate="2018-09-01" />
+		<Student FirstName="Peggy" LastName="Justice" EnrollmentDate="2017-09-01" />
+		<Student FirstName="Laura" LastName="Norman" EnrollmentDate="2019-09-01" />
+		<Student FirstName="Nino" LastName="Olivetto" EnrollmentDate="2011-09-01" />
+	</Students>
+
+	<Instructors>
+		<Instructor FirstName="Kim" LastName="Abercrombie" HireDate="1995-03-11" />
+		<Instructor FirstName="Fadi" LastName="Fakhouri" HireDate="2002-07-06" />
+		<Instructor FirstName="Roger" LastName="Harui" HireDate="1998-07-01" />
+		<Instructor FirstName="Candace" LastName="Kapoor" HireDate="2001-01-15" />
+		<Instructor FirstName="Roger" LastName="Zheng" HireDate="2004-02-12" />
+	</Instructors>
+
+	<OfficeAssignments>
+		<OfficeAssignment InstructorLastName="Fakhouri" Location="Smith 17" />
+		<OfficeAssignment InstructorLastName="Harui" Location="Gowan 27" />
+		<OfficeAssignment InstructorLastName="Kapoor" Location="Thompson 304" />
+	</OfficeAssignments>
+
+	<Departments>
+		<Department Name="English" Budget="350000" StartDate="2007-09-01" AdministratorLastName="Abercrombie" />
+		<Department Name="Mathematics" Budget="100000" StartDate="2007-09-01" AdministratorLastName="Fakhouri" />
+		<Department Name="Engineering" Budget="350000" StartDate="2007-09-01" AdministratorLastName="Harui" />
+		<Department Name="Economics" Budget="100000" StartDate="2007-09-01" AdministratorLastName="Kapoor" />
+	</Departments>
+
+	<Courses>
+		<Course CourseID="1050" Title="Chemistry" Credits="3" Department="Engineering">
+			<Instructors>
+				<InstructorLastName>Kapoor</InstructorLastName>
+				<InstructorLastName>Harui</InstructorLastName>
+			</Instructors>
+		</Course>
+		<Course CourseID="4022" Title="Microeconomics" Credits="3" Department="Economics">
+			<Instructors>
+				<InstructorLastName>Zheng</InstructorLastName>
+			</Instructors>
+		</Course>
+		<Course CourseID="4041" Title="Macroeconomics" Credits="3" Department="Economics">
+			<Instructors>
+				<InstructorLastName>Zheng</InstructorLastName>
+			</Instructors>
+		</Course>
+		<Course CourseID="1045" Title="Calculus" Credits="4" Department="Mathematics">
+			<Instructors>
+				<InstructorLastName>Fakhouri</InstructorLastName>
+			</Instructors>
+		</Course>
+		<Course CourseID="3141" Title="Trigonometry" Credits="4" Department="Mathematics">
+			<Instructors>
+				<InstructorLastName>Harui</InstructorLastName>
+			</Instructors>
+		</Course>
+		<Course CourseID="2021" Title="Composition" Credits="3" Department="English">
+			<Instructors>
+				<InstructorLastName>Abercrombie</InstructorLastName>
+			</Instructors>
+		</Course>
+		<Course CourseID="2042" Title="Literature" Credits="4" Department="English">
+			<Instructors>
+				<InstructorLastName>Abercrombie</InstructorLastName>
+			</Instructors>
+		</Course>
+	</Courses>
+
+	<Enrollments>
+		<Enrollment StudentLastName="Alonso" CourseTitle="Calculus" Grade="B" />
+		<Enrollment StudentLastName="Alonso" CourseTitle="Trigonometry" Grade="B" />
+		<Enrollment StudentLastName="Alonso" CourseTitle="Composition" Grade="B" />
+		<Enrollment StudentLastName="Anand" CourseTitle="Chemistry" />
+		<Enrollment StudentLastName="Anand" CourseTitle="Microeconomics" Grade="B" />
+		<Enrollment StudentLastName="Barzdukas" CourseTitle="Chemistry" Grade="B" />
+		<Enrollment StudentLastName="Li" CourseTitle="Composition" Grade="B" />
+		<Enrollment StudentLastName="Justice" CourseTitle="Literature" Grade="B" />
+		<Enrollment StudentLastName="WORKED" CourseTitle="Literature" Grade="B" />
+	</Enrollments>
+</ContosoUniversityData>

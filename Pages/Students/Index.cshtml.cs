@@ -50,7 +50,7 @@ namespace ContosoUniversity.Pages.Students
             CurrentFilter = searchString;
 
 
-            IQueryable<Student> studentsIq = from s in _context.Student
+            IQueryable<Student> studentsIq = from s in _context.Students
                                                  select s;
 
             if (!string.IsNullOrEmpty(searchString))
