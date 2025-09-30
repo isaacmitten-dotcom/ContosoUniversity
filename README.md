@@ -7,7 +7,8 @@ The file is located at: Data/ContosoUniversityData.xml
 
 ### XML Schema
 
-<ContosoUniversityData>
+  ```
+  <ContosoUniversityData>
   <Students>
     <Student FirstName="..." LastName="..." EnrollmentDate="YYYY-MM-DD" />
   </Students>
