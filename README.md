@@ -3,8 +3,6 @@
 
 This project supports importing and exporting data using an XML file.
 
-The file is located at: Data/ContosoUniversityData.xml
-
 ### XML Schema
 
   ```
