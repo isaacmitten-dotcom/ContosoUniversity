@@ -1,7 +1,4 @@
 # ContosoUniversity
-## XML Import/Export
-
-This project supports importing and exporting data using an XML file.
 
 ### XML Schema
 
