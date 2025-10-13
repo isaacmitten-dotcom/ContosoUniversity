@@ -5,7 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<SchoolContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolContext") ?? throw new InvalidOperationException("Connection string 'SchoolContext' not found.")));
+
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<SchoolContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolContext") ?? throw new InvalidOperationException("Connection string 'SchoolContext' not found.")));
+}
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
@@ -24,14 +29,21 @@ else
     app.UseMigrationsEndPoint();
 }
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<SchoolContext>();
-    //DbInit.Initialize(context);
-    DbSeedFromXML.SeedFromXml(context, "Data/Seed.xml");
-    var exporter = new DbExportToXML(context);
-    exporter.Export("Data/exportedData.xml");
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<SchoolContext>();
+        //DbInit.Initialize(context);
+
+
+        DbSeedFromXML.SeedFromXml(context, "Data/Seed.xml");
+        var exporter = new DbExportToXML(context);
+        exporter.Export("Data/exportedData.xml");
+    }
+
 }
 
 

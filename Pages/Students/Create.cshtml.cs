@@ -51,8 +51,7 @@ namespace ContosoUniversity.Pages.Students
 
             entry.CurrentValues.SetValues(StudentVM);
 
-            _logger.LogInformation("Creating student with data: {@StudentVM}", StudentVM);
-
+            _logger.LogInformation("Creating student: {@Student}", new { StudentVM.FirstName, StudentVM.LastName });
 
             await _context.SaveChangesAsync();
 
