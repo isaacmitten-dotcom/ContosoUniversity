@@ -11,9 +11,15 @@ if (!builder.Environment.IsEnvironment("Testing"))
     builder.Services.AddDbContext<SchoolContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolContext") ?? throw new InvalidOperationException("Connection string 'SchoolContext' not found.")));
 }
 
+builder.Services.AddHealthChecks();
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
+
+app.MapGet("/healthz", () => Results.Ok("OK"));
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
